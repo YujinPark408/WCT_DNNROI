@@ -37,7 +37,7 @@ pip install -r requirements.txt -f https://download.pytorch.org/whl/cu111/torch_
  - [DUNE Collaboration Meeting, Jan. 29 2020](https://indico.fnal.gov/event/20144/session/8/contribution/98)
 
 ## notes
-```
+```bash
 h5dump-shared -n data/g4-rec-r9.h5
 ./scripts/h5plot.py data/g4-rec-r9.h5 /100/frame_loose_lf0
 ./scripts/h5plot.py data/g4-rec-r9.h5 /100/frame_mp3_roi0
@@ -47,4 +47,17 @@ h5dump-shared -n data/g4-rec-r9.h5
 ./train3.sh
 python plot_epoch.py 1
 ./to-ts.py -m test0/CP49.pth
+```
+
+ts to pth
+```bash
+./to-pth.py -m ts-model/unet-l23-cosmic500-e50.ts -o pth-model/unet-l23-cosmic500-e50.pth
+./to-pth.py -m ts-model/nestedunet-l23-cosmic500-e50.ts -o pth-model/nestedunet-l23-cosmic500-e50.pth -t nestedunet
+./to-pth.py -m ts-model/unet-lt-cosmic500-e50.ts -o pth-model/unet-lt-cosmic500-e50.pth -i 2
+```
+pth to ts
+```bash
+./to-ts.py -m pth-model/unet-l23-cosmic500-e50.pth -o ts-model-2.3/unet-l23-cosmic500-e50.ts
+./to-ts.py -m pth-model/nestedunet-l23-cosmic500-e50.pth -o ts-model-2.3/nestedunet-l23-cosmic500-e50.ts -t nestedunet
+./to-ts.py -m pth-model/unet-lt-cosmic500-e50.pth -o ts-model-2.3/unet-lt-cosmic500-e50.ts -i 2
 ```
