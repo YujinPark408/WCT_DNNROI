@@ -70,4 +70,4 @@ if __name__ == "__main__":
         output = net(example)
         # print(output[0][0][0])
 
-    sm.save('ts-model.ts')
+    sm.save(args.output)

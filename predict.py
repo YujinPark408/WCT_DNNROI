@@ -23,9 +23,7 @@ from torchvision import transforms
 
 def predict_img(net,
                 full_img,
-                scale_factor=0.5,
                 out_threshold=0.5,
-                use_dense_crf=True,
                 use_gpu=False):
     
     # eval mode fixes BN and dropout, which yields bad results
@@ -76,9 +74,9 @@ def get_args():
     parser.add_argument('--range', '-r', type=int, nargs='+',
                         help="Event range to be processed",
                         default=0)
-    parser.add_argument('--scale', '-s', type=float,
-                        help="Scale factor for the input images",
-                        default=0.5)
+    parser.add_argument('--tick-rebin', '-s', type=int,
+                        help="Scale down time axis by this factor",
+                        default=10)
 
     return parser.parse_args()
 
@@ -143,8 +141,8 @@ if __name__ == "__main__":
         events = list(np.arange(args.range[0], args.range[1]))
         for event in events:
             # img = h5u.get_hwc_img(fn, event, im_tags, [1, 10], [0, 800], [0, 600], 4000) # U
-            # img = h5u.get_hwc_img(fn, event, im_tags, [1, 10], [800, 1600], [0, 600], 4000) # V
-            img = h5u.get_hwc_img(fn, event, im_tags, [1, 10], [476, 952], [0, 600], 4000) # PDVD, V
+            img = h5u.get_hwc_img(fn, event, im_tags, [1, args.tick_rebin], [800, 1600], [0, 6000//args.tick_rebin], 4000) # V
+            # img = h5u.get_hwc_img(fn, event, im_tags, [1, args.tick_rebin], [476, 952], [0, 6000//args.tick_rebin], 4000) # PDVD, V
 
             print(img.shape)
             if img.shape[0] < img.shape[1]:
@@ -152,9 +150,7 @@ if __name__ == "__main__":
 
             mask = predict_img(net=net,
                                 full_img=img,
-                                scale_factor=args.scale,
                                 out_threshold=args.mask_threshold,
-                                use_dense_crf= not args.no_crf,
                                 use_gpu=not args.cpu)
 
             if args.viz:
