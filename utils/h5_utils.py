@@ -20,7 +20,8 @@ def load(file, event, tags):
   img = np.transpose(img, axes=[1, 0, 2])
   return img
 
-def rebin(a, shape):
+def rebin(a, shape):  # shape = [rebinned size of x, rebinned size of y]
+  '''Downsaming'''
   sh = shape[0],a.shape[0]//shape[0],shape[1],a.shape[1]//shape[1]
   if len(a.shape) == 3:
     sh = shape[0],a.shape[0]//shape[0],shape[1],a.shape[1]//shape[1],a.shape[2]
